@@ -1,0 +1,23 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity four is 
+	port(
+	--	reset : in std_logic;
+		four : out std_logic_vector(31 downto 0)
+	);
+end four;
+
+architecture rtl of four is
+	--signal zeroValue : std_logic_vector(31 downto 0) := "00000000000000000000000000000000";
+	--signal fourValue : std_logic_vector(31 downto 0) := "00000000000000000000000000000100";
+begin
+
+  --data: for i in 31 downto 0 generate
+  --begin
+  -- int_data(i) <= fourValue(i) and not reset;
+  --end generate;
+  
+  four <= "00000000000000000000000000000100";
+  
+end rtl;
