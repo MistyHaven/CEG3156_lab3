@@ -20,16 +20,71 @@ entity forwardingUnit is
 end forwardingUnit;
 
 architecture rtl of forwardingUnit is
+  component equalsChecker is
+    generic ( n : integer := 4 );
+    port (
+      x , y: in std_logic_vector(n-1 downto 0);
+      o: out std_logic
+   );
+  end component;
+  component isZero is
+  port (
+    i : in std_logic_vector(4 downto 0);
+    o : out std_logic
+  );
+  end component;
+
   signal eq_ExMemRd_IdExRs, eq_MemWbRd_IdExRs,
           eq_ExMemRd_IdExRt,eq_MemWbRd_IdExRt  : std_logic;
-  signal RsRtEq, ExMemRdNotZero, MemWbRdNotZero: std_logic;
+  signal RsRtEq, ExMemRdZero, MemWbRdZero: std_logic;
 begin
+  eq1: equalsChecker
+    generic map ( n => bit_width )
+    port map (
+      x => ExMemRegRd,
+      y => IdExRegRs,
+      o => eq_ExMemRd_IdExRs
+   );
 
-  forwardA(1) <= ExMemRegWrite and ExMemRdNotZero and eq_ExMemRd_IdExRs;
-  forwardA(0) <= MemWbRegWrite and MemWbRdNotZero and eq_MemWbRd_IdExRs;
+  eq2: equalsChecker
+    generic map ( n => bit_width )
+    port map (
+      x => MemWbRegRd,
+      y => IdExRegRs,
+      o => eq_MemWbRd_IdExRs
+   );
 
-  forwardB(1) <= ExMemRegWrite and ExMemRdNotZero and eq_ExMemRd_IdExRt;
-  forwardB(0) <= MemWbRegWrite and MemWbRdNotZero and eq_MemWbRd_IdExRt;
+  eq3: equalsChecker
+    generic map ( n => bit_width )
+    port map (
+      x => ExMemRegRd,
+      y => IdExRegRt,
+      o => eq_ExMemRd_IdExRt
+   );
 
+  eq4: equalsChecker
+    generic map ( n => bit_width )
+    port map (
+      x => MemWbRegRd,
+      y => IdExRegRt,
+      o => eq_MemWbRd_IdExRt
+   );
 
+  z1: isZero
+   port map(
+      i => ExMemRegRd,
+      o => ExMemRdZero
+  );
+
+  z2: isZero
+   port map(
+      i => MemWbRegRd,
+      o => MemWbRdZero
+  );
+
+  forwardA(1) <= ExMemRegWrite and not ExMemRdZero and eq_ExMemRd_IdExRs;
+  forwardA(0) <= MemWbRegWrite and not MemWbRdZero and eq_MemWbRd_IdExRs;
+
+  forwardB(1) <= ExMemRegWrite and not ExMemRdZero and eq_ExMemRd_IdExRt;
+  forwardB(0) <= MemWbRegWrite and not MemWbRdZero and eq_MemWbRd_IdExRt;
 end rtl;
