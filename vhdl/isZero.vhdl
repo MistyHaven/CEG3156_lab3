@@ -1,9 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 entity isZero is
-generic (bit_width : integer := 32);
 port (
-  i : in std_logic_vector(bit_width-1 downto 0);
+  i : in std_logic_vector(4 downto 0);
   o : out std_logic
 );
 end isZero;
