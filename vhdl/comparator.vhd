@@ -2,28 +2,20 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 
-entity complementor7 is 
-	port( X : in std_logic_vector(6 downto 0);
-	x_inv : in std_logic;
-	Y : out std_logic_vector(7 downto 0)
+entity comparator is 
+generic (bit_width : integer := 32);
+	port( 
+    a : in std_logic_vector (bit_width - 1 downto 0);
+    b : in std_logic_vector (bit_width - 1 downto 0);
+    equal : out std_logic;
+    not_equal  : out std_logic
 	);
-end comparator7;
+end comparator;
 
 
-architecture rtl of complementor7 is
-	signal temp : std_logic_vector(7 downto 0);
+architecture rtl of comparator is
 begin
-	Y(7) <= temp(7) xor x_inv;
-	Y(6) <= temp(6) xor x_inv;
-	Y(5) <= temp(5) xor x_inv;
-	Y(4) <= temp(4) xor x_inv;
-	Y(3) <= temp(3) xor x_inv;
-	Y(2) <= temp(2) xor x_inv;
-	Y(1) <= temp(1) xor x_inv;
-	Y(0) <= temp(0) xor x_inv;
-	
-	temp <= '0' & X;
-
+equal <= a AND b;
 end rtl;
 	
 
