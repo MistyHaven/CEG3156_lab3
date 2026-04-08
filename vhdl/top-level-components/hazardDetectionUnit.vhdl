@@ -6,7 +6,7 @@ entity hazardDetectionUnit is
     bit_width : integer := 5
   );
   port(
-    IdExMemRead, IfIdSelectRs,IfIdSelectRt : in std_logic; 
+    IdExMemRead, IfIdSelectRs, IfIdSelectRt : in std_logic; 
     branch, jump, bne : in std_logic;
 
     o_stall, o_flush : out std_logic

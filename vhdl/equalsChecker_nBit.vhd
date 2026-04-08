@@ -10,9 +10,6 @@ entity equalsChecker is
  end equalsChecker;
 
 architecture structural of equalsChecker is
-  signal i_y : std_logic_vector(n-1 downto 0);
-
-  
   component inverter_1bit is 
     port (
       a, s: in std_logic;
@@ -26,10 +23,13 @@ architecture structural of equalsChecker is
 		o : out std_logic
 	 );
 	 end component;
+
+  signal i_y : std_logic_vector(n-1 downto 0);
 begin
+
   invert_y: for i in n-1 downto 0 generate
     noty : inverter_1bit
-    port map ( y(i), x(i), i_y(i));
+    port map ( y(i), x(i), i_y(i) );
   end generate;
   
   isEqual : isZero 
