@@ -8,7 +8,7 @@ port (
   i_WbForwardData : in std_logic_vector(31 downto 0);
 
   i_RegReadData1, i_RegReadData2 : in std_logic_vector(32-1 downto 0);
-  i_InstrRt, i_InstrRd : in std_logic_vector(5 downto 0);
+  i_InstrRt, i_InstrRd : in std_logic_vector(5-1 downto 0);
   i_InstrAddrExtShifted : in std_logic_vector(32-1 downto 0); 
 
   i_CtrlEx_RegDst, i_CtrlEx_AluSrc  : in std_logic;
@@ -20,7 +20,7 @@ port (
   o_AluZero : out std_logic;
   o_RegReadData2 : out std_logic_vector(32-1 downto 0);
 
-  o_WbRegWriteAddr : out std_logic_vector(5 downto 0);
+  o_WbRegWriteAddr : out std_logic_vector(5-1 downto 0);
 
   o_CtrlMem_BranchSel, o_CtrlMem_MemRead, o_CtrlMem_MemWrite : out std_logic;
   o_CtrlWb_RegWrite, o_CtrlWb_MemToReg: out std_logic
@@ -128,7 +128,7 @@ alu_inst: alu
 );
 
 chooseWriteAddr: mux2_nBit
-  generic map ( bit_width => 6 )
+  generic map ( bit_width => 5 )
   port map(
     i_1 => i_InstrRt,
     i_2 => i_InstrRd,

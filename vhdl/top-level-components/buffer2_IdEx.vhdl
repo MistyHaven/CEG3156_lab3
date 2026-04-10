@@ -7,7 +7,7 @@ entity buffer_IdEx is
     i_flush: in std_logic;
 
     i_regReadData1, i_regReadData2 : in std_logic_vector(32-1 downto 0); -- 64
-    i_InstrRt, i_InstrRd : in std_logic_vector(5 downto 0); -- 12
+    i_InstrRt, i_InstrRd : in std_logic_vector(5-1 downto 0); -- 10
     i_InstrAddrExtended : in std_logic_vector(32-1 downto 0); -- 32
 
     i_CtrlEx_RegDst, i_CtrlEx_AluSrc  : in std_logic; -- 2
@@ -16,7 +16,7 @@ entity buffer_IdEx is
     i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic; --2
 
     o_regReadData1, o_regReadData2 : out std_logic_vector(32-1 downto 0);
-    o_InstrRt, o_InstrRd : out std_logic_vector(5 downto 0);
+    o_InstrRt, o_InstrRd : out std_logic_vector(5-1 downto 0);
     o_InstrAddrExtended : out std_logic_vector(32-1 downto 0); 
 
     o_CtrlEx_RegDst, o_CtrlEx_AluSrc  : out std_logic;
@@ -51,8 +51,8 @@ begin
 
   buffer_in(31 downto 0) <= i_regReadData1;
   buffer_in(63 downto 32) <= i_regReadData2;
-  buffer_in(69 downto 64) <= i_InstrRt;
-  buffer_in(75 downto 70) <= i_InstrRd;
+  buffer_in(68 downto 64) <= i_InstrRt;
+  buffer_in(74 downto 70) <= i_InstrRd;
   buffer_in(107 downto 76) <= i_InstrAddrExtended;
   buffer_in(108) <= i_CtrlEx_RegDst;
   buffer_in(109) <= i_CtrlEx_AluSrc ;
@@ -65,8 +65,8 @@ begin
 
   o_regReadData1 <= buffer_in(31 downto 0);
   o_regReadData2 <= buffer_in(63 downto 32);
-  o_InstrRt <= buffer_in(69 downto 64);
-  o_InstrRd <= buffer_in(75 downto 70);
+  o_InstrRt <= buffer_in(68 downto 64);
+  o_InstrRd <= buffer_in(74 downto 70);
   o_InstrAddrExtended <= buffer_in(107 downto 76);
   o_CtrlEx_RegDst <= buffer_in(108);
   o_CtrlEx_AluSrc  <= buffer_in(109);
