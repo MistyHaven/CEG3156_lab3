@@ -3,8 +3,8 @@ use ieee.std_logic_1164.all;
 
 entity buffer_ExMem is 
   port (
-    clk: in std_logic;
-    flush: in std_logic
+    i_clk: in std_logic;
+    i_flush: in std_logic
 
     
   );
@@ -28,9 +28,9 @@ begin
   buf: regPIPO_nBit
   generic map( bit_width => 32) -- DEFINE TOTAL BIT WIDTH THERE
   port map (
-    clock => clk,
-    reset => flush,
-    load => clk,
+    clock => i_clk,
+    reset => i_flush,
+    load => i_clk,
     d => buffer_in,
     o => buffer_out
   );

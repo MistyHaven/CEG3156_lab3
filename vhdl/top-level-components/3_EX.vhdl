@@ -13,6 +13,9 @@ port (
   i_CtrlEx_AluOp : in std_logic_vector(1 downto 0);
   i_CtrlMem_BranchSel, i_CtrlMem_MemRead, i_CtrlMem_MemWrite : in std_logic;
   i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic;
+  
+  i_forwardASig, i_forwardBSig : in std_logic_vector(1 downto 0); 
+  i_AluAForwardData, i_AluBForwardData : in std_logic_vector(31 downto 0);
 
   o_MemPcInAddress : out std_logic_vector(32-1 downto 0);
   o_AluOut : out std_logic_vector(32-1 downto 0);
@@ -67,7 +70,16 @@ port (
 );
 end component;
 
-signal int_AluB : std_logic_vector(31 downto 0);
+component mux4_nBit is
+generic (bit_width : integer := 8);
+port (
+  i_1, i_2, i_3, i_4 : in std_logic_vector(bit_width-1 downto 0);
+  sel : in std_logic_vector(1 downto 0);
+  o : out std_logic_vector(bit_width-1 downto 0)
+);
+end component;
+
+signal int_AluA, int_AluB : std_logic_vector(31 downto 0);
 signal int_AluFunc : std_logic_vector(5 downto 0);
 signal int_AluCtrl : std_logic_vector(1 downto 0);
 signal int_AddrShifted : std_logic_vector(31 downto 0);
@@ -78,11 +90,24 @@ begin
 zero <= '0';
 int_AluFunc <= i_InstrAddrExtended(5 downto 0);
 
-aluB: mux2_nBit
+aluA: mux4_nBit
    generic map( bit_width => 32)
    port map(
     i_1 => i_RegReadData1,
     i_2 => i_InstrAddrExtended,
+    i_3 => i_RegReadData1,
+    i_4 => i_InstrAddrExtended,
+    sel => i_CtrlEx_AluSrc,
+    o => int_AluB
+);
+
+aluB: mux4_nBit
+   generic map( bit_width => 32)
+   port map(
+    i_1 => i_RegReadData1,
+    i_2 => i_InstrAddrExtended,
+    i_3 => i_RegReadData1,
+    i_4 => i_InstrAddrExtended,
     sel => i_CtrlEx_AluSrc,
     o => int_AluB
 );

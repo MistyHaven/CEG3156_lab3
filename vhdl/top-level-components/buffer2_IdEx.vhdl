@@ -59,20 +59,20 @@ begin
   buffer_in(148) <= i_CtrlWb_MemToReg;
 
 
-  buffer_out(31 downto 0) <= o_ExEffectiveAddress;
-  buffer_out(63 downto 32) <= o_regReadData1;
-  buffer_out(95 downto 64) <= o_regReadData2;
-  buffer_out(101 downto 96) <= o_InstrRt;
-  buffer_out(107 downto 102) <= o_InstrRd;
-  buffer_out(139 downto 108) <= o_InstrAddrExtended;
-  buffer_out(140) <= o_CtrlEx_RegDst;
-  buffer_out(141) <= o_CtrlEx_AluSrc ;
-  buffer_out(143 downto 142) <= o_CtrlEx_AluOp;
-  buffer_out(144) <= o_CtrlMem_BranchSel;
-  buffer_out(145) <= o_CtrlMem_MemRead;
-  buffer_out(146) <= o_CtrlMem_MemWrite;
-  buffer_out(147) <= o_CtrlWb_RegWrite;
-  buffer_out(148) <= o_CtrlWb_MemToReg;
+  o_ExEffectiveAddress <= buffer_out(31 downto 0);
+  o_regReadData1 <= buffer_out(63 downto 32);
+  o_regReadData2 <= buffer_out(95 downto 64);
+  o_InstrRt <= buffer_out(101 downto 96);
+  o_InstrRd <= buffer_out(107 downto 102);
+  o_InstrAddrExtended <= buffer_out(139 downto 108);
+  o_CtrlEx_RegDst <= buffer_out(140);
+  o_CtrlEx_AluSrc  <= buffer_out(141);
+  o_CtrlEx_AluOp <= buffer_out(143 downto 142);
+  o_CtrlMem_BranchSel <= buffer_out(144);
+  o_CtrlMem_MemRead <= buffer_out(145);
+  o_CtrlMem_MemWrite <= buffer_out(146);
+  o_CtrlWb_RegWrite <= buffer_out(147);
+  o_CtrlWb_MemToReg <= buffer_out(148);
 
   buf: regPIPO_nBit
   generic map( bit_width => 32) -- DEFINE TOTAL BIT WIDTH THERE
