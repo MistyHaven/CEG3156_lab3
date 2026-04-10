@@ -3,23 +3,23 @@ use ieee.std_logic_1164.all;
 entity EX_block is
 port (
   clock : in std_logic;
-
-  i_RegReadData1, i_RegReadData2 : in std_logic_vector(32-1 downto 0);
-  i_InstrRt, i_InstrRd : in std_logic_vector(5 downto 0);
-  i_InstrAddrExtended : in std_logic_vector(32-1 downto 0); 
-
-  i_CtrlEx_RegDst, i_CtrlEx_AluSrc  : in std_logic;
-  i_CtrlEx_AluOp : in std_logic_vector(1 downto 0);
-
-  i_CtrlMem_BranchSel, i_CtrlMem_MemRead, i_CtrlMem_MemWrite : in std_logic;
-  i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic;
-  
   i_forwardASig, i_forwardBSig : in std_logic_vector(1 downto 0); 
   i_MemForwardData : in std_logic_vector(31 downto 0);
   i_WbForwardData : in std_logic_vector(31 downto 0);
 
+  i_RegReadData1, i_RegReadData2 : in std_logic_vector(32-1 downto 0);
+  i_InstrRt, i_InstrRd : in std_logic_vector(5 downto 0);
+  i_InstrAddrExtShifted : in std_logic_vector(32-1 downto 0); 
+
+  i_CtrlEx_RegDst, i_CtrlEx_AluSrc  : in std_logic;
+  i_CtrlEx_AluOp : in std_logic_vector(1 downto 0);
+  i_CtrlMem_BranchSel, i_CtrlMem_MemRead, i_CtrlMem_MemWrite : in std_logic;
+  i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic;
+  
   o_AluOut : out std_logic_vector(32-1 downto 0);
   o_AluZero : out std_logic;
+  o_RegReadData2 : out std_logic_vector(32-1 downto 0);
+
   o_WbRegWriteAddr : out std_logic_vector(5 downto 0);
 
   o_CtrlMem_BranchSel, o_CtrlMem_MemRead, o_CtrlMem_MemWrite : out std_logic;
@@ -85,7 +85,8 @@ begin
 
 zero <= '0';
 zero32 <= (others => '0');
-int_AluFunc <= i_InstrAddrExtended(5 downto 0);
+int_AluFunc <= i_InstrAddrExtShifted(5 downto 0);
+o_RegReadData2 <= i_RegReadData1;
 
 aluA: mux4_nBit
    generic map( bit_width => 32)
@@ -104,7 +105,7 @@ aluB: mux4_nBit
     i_1 => i_RegReadData1,
     i_2 => i_WbForwardData,
     i_3 => i_MemForwardData,
-    i_4 => i_InstrAddrExtended,
+    i_4 => i_InstrAddrExtShifted,
     sel => i_forwardBSig,
     o => int_AluB
 );

@@ -37,7 +37,7 @@ begin
   o_IdEffectiveAddress <= buffer_out(63 downto 32);
 
   buf: regPIPO_nBit
-  generic map( bit_width => 32) -- DEFINE TOTAL BIT WIDTH THERE
+  generic map( bit_width => 64) -- DEFINE TOTAL BIT WIDTH THERE
   port map (
     clock => clk,
     reset => flush,
