@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 
 entity buffer_MemWb is 
   port (
-    i_clk: std_logic;
+    i_clk: in std_logic;
     i_flush: in std_logic;
   
     i_RegReadData1 : in std_logic_vector(32-1 downto 0);
