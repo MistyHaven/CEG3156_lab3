@@ -84,11 +84,13 @@ signal int_AluA, int_AluB : std_logic_vector(31 downto 0);
 signal int_AluFunc : std_logic_vector(5 downto 0);
 signal int_AluCtrl : std_logic_vector(1 downto 0);
 signal int_AddrShifted : std_logic_vector(31 downto 0);
+signal zero32 : std_logic_vector(31 downto 0);
 signal zero : std_logic;
 
 begin 
 
 zero <= '0';
+zero32 <= (others => '0');
 int_AluFunc <= i_InstrAddrExtended(5 downto 0);
 
 aluA: mux4_nBit
@@ -97,7 +99,7 @@ aluA: mux4_nBit
     i_1 => i_RegReadData1,
     i_2 => i_WbForwardData,
     i_3 => i_MemForwardData,
-    i_4 => i_InstrAddrExtended,
+    i_4 => zero32,
     sel => i_forwardASig,
     o => int_AluA
 );
