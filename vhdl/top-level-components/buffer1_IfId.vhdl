@@ -33,8 +33,8 @@ begin
   buffer_in(31 downto 0) <= i_IfInstruction;
   buffer_in(63 downto 32) <= i_IfEffectiveAddress;
 
-  buffer_out(31 downto 0) <= o_IdInstruction;
-  buffer_out(63 downto 32) <= o_IdEffectiveAddress;
+  o_IdInstruction <= buffer_out(31 downto 0);
+  o_IdEffectiveAddress <= buffer_out(63 downto 32);
 
   buf: regPIPO_nBit
   generic map( bit_width => 32) -- DEFINE TOTAL BIT WIDTH THERE
