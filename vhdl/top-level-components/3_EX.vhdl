@@ -4,13 +4,13 @@ entity EX_block is
 port (
   clock : in std_logic;
 
-  i_ExEffectiveAddress : in std_logic_vector(32-1 downto 0);
   i_RegReadData1, i_RegReadData2 : in std_logic_vector(32-1 downto 0);
   i_InstrRt, i_InstrRd : in std_logic_vector(5 downto 0);
   i_InstrAddrExtended : in std_logic_vector(32-1 downto 0); 
 
   i_CtrlEx_RegDst, i_CtrlEx_AluSrc  : in std_logic;
   i_CtrlEx_AluOp : in std_logic_vector(1 downto 0);
+
   i_CtrlMem_BranchSel, i_CtrlMem_MemRead, i_CtrlMem_MemWrite : in std_logic;
   i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic;
   
@@ -18,10 +18,12 @@ port (
   i_MemForwardData : in std_logic_vector(31 downto 0);
   i_WbForwardData : in std_logic_vector(31 downto 0);
 
-  o_MemPcInAddress : out std_logic_vector(32-1 downto 0);
   o_AluOut : out std_logic_vector(32-1 downto 0);
   o_AluZero : out std_logic;
-  o_WbRegWriteAddr : out std_logic_vector(5 downto 0)
+  o_WbRegWriteAddr : out std_logic_vector(5 downto 0);
+
+  o_CtrlMem_BranchSel, o_CtrlMem_MemRead, o_CtrlMem_MemWrite : out std_logic;
+  o_CtrlWb_RegWrite, o_CtrlWb_MemToReg: out std_logic
 );
 end EX_block;
 
@@ -52,14 +54,6 @@ component addSub_nBit is
     s: out std_logic_vector(n-1 downto 0);
     co: out std_logic
  );
-end component;
-
-component shl2 is
-generic (bit_width : integer := 32);
-port (
-  i : in std_logic_vector(bit_width-3 downto 0);
-  o_shifted : out std_logic_vector(bit_width-1 downto 0)
-);
 end component;
 
 component mux2_nBit is
@@ -130,22 +124,6 @@ alu_inst: alu
     i_operation => int_AluCtrl,
     o_aluZero => o_AluZero,
     o => o_AluOut
-);
-
-correctOffset: shl2
-  generic map (bit_width => 32)
-  port map(
-    i => i_InstrAddrExtended,
-    o_shifted => int_AddrShifted
-);
-
-jumpCalc: addSub_nBit
-  generic map (n => 32)
-  port map (
-    x => i_ExEffectiveAddress,
-    y => int_AddrShifted,
-    ci => zero,
-    s => o_MemPcInAddress
 );
 
 chooseWriteAddr: mux2_nBit

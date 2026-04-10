@@ -5,15 +5,15 @@ entity ID_block is
   port (
     clock : in std_logic;
     i_IfInstruction : in std_logic_vector(32-1 downto 0);
-    i_ExEffectiveAddress : in std_logic_vector(32-1 downto 0);
+    i_IdEffectiveAddress : in std_logic_vector(32-1 downto 0);
     i_CtrlWb_RegWrite : in std_logic;
     i_WbRegWriteAddr : in std_logic_vector(4 downto 0);
     i_WbRegWriteData : in std_logic_vector(31 downto 0);
 
     o_regReadData1, o_regReadData2 : out std_logic_vector(32-1 downto 0);
+    o_PcInAddr : out std_logic_vector(32-1 downto 0);
 
     o_InstrRt, o_InstrRd : out std_logic_vector(5 downto 0);
-    o_InstrAddrExtended : out std_logic_vector(32-1 downto 0);
     
     -- EX stage control signals
     o_CtrlEx_RegDst, o_CtrlEx_AluSrc  : out std_logic;
@@ -34,6 +34,14 @@ architecture rtl of ID_block is
       s: out std_logic_vector(n-1 downto 0);
       co: out std_logic
    );
+  end component;
+
+  component shl2 is
+  generic (bit_width : integer := 32);
+  port (
+    i : in std_logic_vector(bit_width-3 downto 0);
+    o_shifted : out std_logic_vector(bit_width-1 downto 0)
+  );
   end component;
 
   component signExtend is
@@ -73,10 +81,11 @@ architecture rtl of ID_block is
 
   signal zero : std_logic;
   signal int_InstructionRs, int_InstructionRt, int_InstructionRd : std_logic_vector(4 downto 0);
-  signal int_InstructionAddr : std_logic_vector(15 downto 0);
-  signal int_InstructionAddrShifted : std_logic_vector(31 downto 0);
+  signal int_InstrAddr : std_logic_vector(15 downto 0);
   signal int_opcode : std_logic_vector(5 downto 0);
 
+  signal int_InstrAddrShifted : std_logic_vector(31 downto 0);
+  signal int_InstrAddrExtended : std_logic_vector(32-1 downto 0);
 begin
 
   zero <= '0';
@@ -85,7 +94,7 @@ begin
   int_InstructionRs <= i_IfInstruction(25 downto 21);
   int_InstructionRt <= i_IfInstruction(20 downto 16);
   int_InstructionRd <= i_IfInstruction(15 downto 11);
-  int_InstructionAddr <= i_IfInstruction(15 downto 0);
+  int_InstrAddr <= i_IfInstruction(15 downto 0);
 
   o_InstrRt <= int_InstructionRt;
   o_InstrRd <= int_InstructionRd;
@@ -106,8 +115,24 @@ begin
 
   ext: signExtend
     port map (
-      i_16 => int_InstructionAddr,
-      o_32 => o_InstrAddrExtended
+      i_16 => int_InstrAddr,
+      o_32 => int_InstrAddrExtended
+  );
+
+  correctOffset: shl2
+    generic map (bit_width => 32)
+    port map(
+      i => int_InstrAddrExtended,
+      o_shifted => int_InstrAddrShifted
+  );
+
+  jumpCalc: addSub_nBit
+    generic map (n => 32)
+    port map (
+      x => i_IdEffectiveAddress,
+      y => int_InstrAddrShifted,
+      ci => zero,
+      s => o_PcInAddr
   );
   
   -- int_opcode <= 

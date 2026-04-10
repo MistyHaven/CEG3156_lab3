@@ -4,9 +4,15 @@ use ieee.std_logic_1164.all;
 entity buffer_ExMem is 
   port (
     i_clk: in std_logic;
-    i_flush: in std_logic
+    i_flush: in std_logic;
 
-    
+    i_MemPcInAddress : in std_logic_vector(32-1 downto 0);
+    i_AluOut : in std_logic_vector(32-1 downto 0);
+    i_AluZero : in std_logic;
+    i_WbRegWriteAddr : in std_logic_vector(5 downto 0);
+
+    i_CtrlMem_BranchSel, i_CtrlMem_MemRead, i_CtrlMem_MemWrite : in std_logic;
+    i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic
   );
 end buffer_ExMem;
 
