@@ -7,7 +7,7 @@ entity buffer_MemWb is
     i_flush: in std_logic;
   
     i_RegReadData1 : in std_logic_vector(32-1 downto 0);
-    i_MemAddress : out std_logic_vector(32-1 downto 0);
+    i_MemAddress : in std_logic_vector(32-1 downto 0);
     i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic; --2
 
     o_RegReadData1 : out std_logic_vector(32-1 downto 0);
@@ -48,5 +48,6 @@ o_RegReadData1 <= buffer_out(31 downto 0);
 o_MemAddress <= buffer_out(63 downto 32); 
 o_CtrlWb_RegWrite <= buffer_out(64); 
 o_CtrlWb_MemToReg <= buffer_out(65);
+
 end architecture;
 

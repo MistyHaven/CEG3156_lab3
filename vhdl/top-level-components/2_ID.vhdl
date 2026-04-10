@@ -14,8 +14,9 @@ entity ID_block is
     o_PcInAddr : out std_logic_vector(32-1 downto 0);
 
     o_InstrRt, o_InstrRd : out std_logic_vector(5 downto 0);
-    
-    -- EX stage control signals
+
+    o_CtrlJump : out std_logic;
+    -- EX stage control signal
     o_CtrlEx_RegDst, o_CtrlEx_AluSrc  : out std_logic;
     o_CtrlEx_AluOp : out std_logic_vector(1 downto 0);
     -- MEM stage control signals
@@ -69,7 +70,7 @@ architecture rtl of ID_block is
 
   component controlUnitLab3 is
   port(
-    branch,
+    jump, branch, branchNEQ,
     memRead, memToReg, memWrite,
     regDst, regWrite,
     aluSrc : out std_logic;
@@ -147,6 +148,7 @@ begin
       memWrite => o_CtrlMem_MemWrite,
       memToReg => o_CtrlWb_MemToReg,
       regWrite => o_CtrlWb_RegWrite,
+      jump => o_CtrlJump,
       i_op => int_opcode
   );
 end rtl;
