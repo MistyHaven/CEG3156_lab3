@@ -15,7 +15,8 @@ port (
   i_CtrlWb_RegWrite, i_CtrlWb_MemToReg: in std_logic;
   
   i_forwardASig, i_forwardBSig : in std_logic_vector(1 downto 0); 
-  i_AluAForwardData, i_AluBForwardData : in std_logic_vector(31 downto 0);
+  i_MemForwardData : in std_logic_vector(31 downto 0);
+  i_WbForwardData : in std_logic_vector(31 downto 0);
 
   o_MemPcInAddress : out std_logic_vector(32-1 downto 0);
   o_AluOut : out std_logic_vector(32-1 downto 0);
@@ -94,21 +95,21 @@ aluA: mux4_nBit
    generic map( bit_width => 32)
    port map(
     i_1 => i_RegReadData1,
-    i_2 => i_InstrAddrExtended,
-    i_3 => i_RegReadData1,
+    i_2 => i_WbForwardData,
+    i_3 => i_MemForwardData,
     i_4 => i_InstrAddrExtended,
-    sel => i_CtrlEx_AluSrc,
-    o => int_AluB
+    sel => i_forwardASig,
+    o => int_AluA
 );
 
 aluB: mux4_nBit
    generic map( bit_width => 32)
    port map(
     i_1 => i_RegReadData1,
-    i_2 => i_InstrAddrExtended,
-    i_3 => i_RegReadData1,
+    i_2 => i_WbForwardData,
+    i_3 => i_MemForwardData,
     i_4 => i_InstrAddrExtended,
-    sel => i_CtrlEx_AluSrc,
+    sel => i_forwardBSig,
     o => int_AluB
 );
 
